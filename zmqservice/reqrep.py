@@ -24,7 +24,7 @@ SOFTWARE.
 '''
 
 import uuid
-import nanomsg
+import zmq
 import logging
 
 from .error import DecodeError
@@ -33,8 +33,7 @@ from .error import AuthenticateError
 from .error import AuthenticatorInvalidSignature
 from .encoder import MsgPackEncoder
 
-from .core import Endpoint
-from .core import Process
+from .core import Endpoint, Process, setGlobalContext
 
 
 class Responder(Endpoint, Process):
@@ -44,9 +43,11 @@ class Responder(Endpoint, Process):
     # pylint: disable=no-member
     def __init__(self, address, encoder=None, authenticator=None,
                  socket=None, bind=True, timeouts=(None, None)):
+        setGlobalContext()
 
         # Defaults
-        socket = socket or nanomsg.Socket(nanomsg.REP)
+        socket = socket or zmq.context.socket(zmq.REP)
+        socket.linger = 0 # prevent hang on close
         encoder = encoder or MsgPackEncoder()
 
         super(Responder, self).__init__(
@@ -132,9 +133,11 @@ class Requester(Endpoint):
     # pylint: disable=no-member
     def __init__(self, address, encoder=None, authenticator=None,
                  socket=None, bind=False, timeouts=(None, None)):
+        setGlobalContext()
 
         # Defaults
-        socket = socket or nanomsg.Socket(nanomsg.REQ)
+        socket = socket or zmq.context.socket(zmq.REQ)
+        socket.linger = 0 # prevent hang on close
         encoder = encoder or MsgPackEncoder()
 
         super(Requester, self).__init__(

@@ -1,5 +1,5 @@
 import time
-from nanoservice import Publisher
+from zmqservice import Publisher
 
 name = 'pub1'
 p = Publisher('ipc:///tmp/pub1.sock', bind=True)

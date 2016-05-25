@@ -1,8 +1,8 @@
 import time
 import hashlib
 
-from nanoservice import Requester
-from nanoservice import Authenticator
+from zmqservice import Requester
+from zmqservice import Authenticator
 
 
 def main():

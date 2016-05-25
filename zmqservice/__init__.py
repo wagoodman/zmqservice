@@ -1,11 +1,10 @@
-"""Main module for nanoservice"""
+"""Main module for zmqservice"""
 
-
-from nanoservice.reqrep import Requester, Responder
-from nanoservice.pubsub import Subscriber, Publisher
-from nanoservice.crypto import Authenticator
-from nanoservice.error import (
-    NanoServiceError,
+from zmqservice.reqrep import Requester, Responder
+from zmqservice.pubsub import Subscriber, Publisher
+from zmqservice.crypto import Authenticator
+from zmqservice.error import (
+    ZmqServiceError,
     ServiceError,
     ClientError,
     ConfigError,
@@ -20,13 +19,13 @@ from nanoservice.error import (
 
 __all__ = [
     'Requester', 'Responder', 'Subscriber', 'Publisher', 'Authenticator',
-    'NanoServiceError', 'ServiceError', 'ClientError', 'ConfigError',
+    'ZmqServiceError', 'ServiceError', 'ClientError', 'ConfigError',
     'AuthenticatorInvalidSignature', 'RequestParseError',
     'PublisherError', 'SubscriberError', 'EncodeError',
     'DecodeError', 'AuthenticateError'
 ]
 
-
+""" # Deprication example...
 ######################################################################
 # Emit warnings for deprecated components
 ######################################################################
@@ -50,3 +49,4 @@ class Client(Requester):
         logging.warning('Client is deprecated; use Requester instead.')
         super(Client, self).__init__(
             address, encoder, authenticator, socket, bind)
+"""

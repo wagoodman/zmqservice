@@ -1,6 +1,6 @@
 # client
 
-from nanoservice import Requester
+from zmqservice import Requester
 
 c = Requester('ipc:///tmp/service.sock')
 

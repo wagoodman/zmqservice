@@ -1,37 +1,37 @@
-"""NanoService Exceptions"""
+"""ZmqService Exceptions"""
 
 
-class NanoServiceError(Exception):
+class ZmqServiceError(Exception):
     """Base exception for Nanoservice"""
     pass
 
 
-class ServiceError(NanoServiceError):
+class ServiceError(ZmqServiceError):
     """Service Generic Exception"""
     pass
 
 
-class ClientError(NanoServiceError):
+class ClientError(ZmqServiceError):
     """Client Generic Exception"""
     pass
 
 
-class ConfigError(NanoServiceError):
+class ConfigError(ZmqServiceError):
     """Config Generic Exception"""
     pass
 
 
-class AuthenticatorInvalidSignature(NanoServiceError):
+class AuthenticatorInvalidSignature(ZmqServiceError):
     """ Message could not be authenticated """
     pass
 
 
-class RequestParseError(NanoServiceError):
+class RequestParseError(ZmqServiceError):
     """ Message from client could not be parsed """
     pass
 
 
-class PublisherError(NanoServiceError):
+class PublisherError(ZmqServiceError):
     """Publisher Generic Exception"""
     pass
 

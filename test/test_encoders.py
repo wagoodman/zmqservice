@@ -1,10 +1,10 @@
 import hashlib
 from multiprocessing import Process
 
-from nanoservice import Responder
-from nanoservice import Requester
-from nanoservice import encoder
-from nanoservice import Authenticator
+from zmqservice import Responder
+from zmqservice import Requester
+from zmqservice import encoder
+from zmqservice import Authenticator
 
 
 def check(res, expected):

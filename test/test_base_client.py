@@ -1,7 +1,7 @@
 import unittest
 
-from nanoservice import Responder
-from nanoservice import Requester
+from zmqservice import Responder
+from zmqservice import Requester
 
 
 class BaseTestCase(unittest.TestCase):

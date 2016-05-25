@@ -1,6 +1,6 @@
 import time
 from multiprocessing import Process
-from nanoservice import Subscriber, Publisher
+from zmqservice import Subscriber, Publisher
 
 import util
 

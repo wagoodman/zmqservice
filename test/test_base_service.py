@@ -1,10 +1,10 @@
 import unittest
 
-from nanoservice import Responder
-from nanoservice import Requester
+from zmqservice import Responder
+from zmqservice import Requester
 
-from nanoservice import error
-from nanoservice import crypto
+from zmqservice import error
+from zmqservice import crypto
 
 
 class BaseTestCase(unittest.TestCase):

@@ -1,4 +1,4 @@
-from nanoservice import Subscriber
+from zmqservice import Subscriber
 
 
 def log(message):

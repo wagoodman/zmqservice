@@ -23,11 +23,12 @@ SOFTWARE.
 
 '''
 
+import os
 import sys
 import signal
 import logging
 import threading
-import nanomsg
+import zmq
 
 from .error import EncodeError
 from .error import DecodeError
@@ -35,6 +36,15 @@ from .error import AuthenticateError
 from .error import AuthenticatorInvalidSignature
 from .error import EndpointError
 
+def setGlobalContext():
+    procId = getattr(zmq, 'procId', None)
+    # This is the first import or ...
+    # This is a new process (from a fork or similar), the old context is stale
+    if (procId == None and getattr(zmq, 'context', None) == None) or \
+       procId != os.getpid():
+
+        zmq.context = zmq.Context()
+        zmq.procId = os.getpid()
 
 class Endpoint(object):
 
@@ -65,7 +75,7 @@ class Endpoint(object):
         self.initialize(timeouts)
 
     def initialize(self, timeouts):
-        """ Bind or connect the nanomsg socket to some address """
+        """ Bind or connect the zmq socket to some address """
 
         # Bind or connect to address
         if self.bind is True:
@@ -77,7 +87,7 @@ class Endpoint(object):
         self._set_timeouts(timeouts)
 
     def _set_timeouts(self, timeouts):
-        """ Set socket timeouts for send and receive respectively """
+        #Set socket timeouts for send and receive respectively
 
         (send_timeout, recv_timeout) = (None, None)
 
@@ -89,12 +99,10 @@ class Endpoint(object):
                 'the timeout values for send and receive respectively')
 
         if send_timeout is not None:
-            self.socket.set_int_option(
-                nanomsg.SOL_SOCKET, nanomsg.SNDTIMEO, send_timeout)
+            self.socket.setsockopt(zmq.SNDTIMEO, send_timeout)
 
         if recv_timeout is not None:
-            self.socket.set_int_option(
-                nanomsg.SOL_SOCKET, nanomsg.RCVTIMEO, recv_timeout)
+            self.socket.setsockopt(zmq.RCVTIMEO, recv_timeout)
 
     def send(self, payload):
         """ Encode and sign (optional) the send through socket """

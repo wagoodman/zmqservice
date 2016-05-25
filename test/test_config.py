@@ -1,8 +1,8 @@
 import json
 import unittest
 
-from nanoservice import *
-from nanoservice import config
+from zmqservice import *
+from zmqservice import config
 
 
 class TestConfig(unittest.TestCase):

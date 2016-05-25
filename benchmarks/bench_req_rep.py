@@ -1,13 +1,13 @@
 import time
 from multiprocessing import Process
-from nanoservice import Service, Client
+from zmqservice import Responder, Requester
 
 import util
 
 
 def start_service(addr, n):
     """ Start a service """
-    s = Service(addr)
+    s = Responder(addr)
     s.register('add', lambda x, y: x + y)
 
     started = time.time()
@@ -41,7 +41,7 @@ def run(N, addr):
     time.sleep(0.1)  # Wait for service to connect
 
     # Create client and make reqs
-    c = Client(addr)
+    c = Requester(addr)
     bench(c, N)
     c.socket.close()
 

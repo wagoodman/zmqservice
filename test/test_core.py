@@ -1,7 +1,7 @@
 import unittest
 
-from nanoservice import Subscriber
-from nanoservice import Publisher
+from zmqservice import Subscriber
+from zmqservice import Publisher
 
 
 class EndpointTest(unittest.TestCase):
