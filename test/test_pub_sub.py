@@ -1,8 +1,8 @@
 import unittest
 
-from nanoservice import Subscriber
-from nanoservice import Publisher
-from nanoservice import Authenticator
+from zmqservice import Subscriber
+from zmqservice import Publisher
+from zmqservice import Authenticator
 
 
 class BaseTestCase(unittest.TestCase):

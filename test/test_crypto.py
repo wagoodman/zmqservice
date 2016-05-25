@@ -1,7 +1,7 @@
 import unittest
 
-from nanoservice import crypto
-from nanoservice import error
+from zmqservice import crypto
+from zmqservice import error
 
 
 class TestAuthenticator(unittest.TestCase):

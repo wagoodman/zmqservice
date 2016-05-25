@@ -1,9 +1,7 @@
 import time
 from multiprocessing import Process
 
-from nanoservice import Authenticator
-from nanoservice import Service
-from nanoservice import Client
+from zmqservice import Authenticator, Responder, Requester
 
 import util
 
@@ -13,7 +11,7 @@ auth = Authenticator('secret')
 def start_service(addr, n, authenticator):
     """ Start a service """
 
-    s = Service(addr, authenticator=authenticator)
+    s = Responder(addr, authenticator=authenticator)
     s.register('add', lambda x, y: x + y)
 
     started = time.time()
@@ -48,7 +46,7 @@ def run(N, addr):
     time.sleep(0.1)  # Wait for service to connect
 
     # Create client and make reqs
-    c = Client(addr, authenticator=auth)
+    c = Requester(addr, authenticator=auth)
     bench(c, N)
     c.socket.close()
 

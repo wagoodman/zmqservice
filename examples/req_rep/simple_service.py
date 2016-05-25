@@ -1,5 +1,5 @@
 import logging
-from nanoservice import Responder
+from zmqservice import Responder
 
 
 def greet(name):

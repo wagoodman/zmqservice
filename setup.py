@@ -1,6 +1,6 @@
-"""Nanoservice installation script
+"""zmqservice installation script
 
-https://github.com/walkr/nanoservice
+https://github.com/wagoodman/zmqservice
 """
 
 #!/usr/bin/env python
@@ -27,24 +27,23 @@ def read_long_description(readme_file):
         return pypandoc.convert(readme_file, 'rst')
 
 setup(
-    name='nanoservice',
-    version='0.7.2',
-    packages=['nanoservice'],
+    name='zmqservice',
+    version='0.1.0',
+    packages=['zmqservice'],
     author='Tony Walker',
-    author_email='walkr.walkr@gmail.com',
-    url='https://github.com/walkr/nanoservice',
+    url='https://github.com/wagoodman/zmqservice',
     license='MIT',
-    description='nanoservice is a small Python library for '
-                'writing lightweight networked services using nanomsg',
+    description='zmqservice is a small Python library for '
+                'writing lightweight networked services using zmq',
     long_description=read_long_description('README.md'),
     install_requires=[
         'msgpack-python',
-        'nanomsg',
+        'pyzmq',
         'nose',
     ],
-    dependency_links=[
-        'git+https://github.com/tonysimpson/nanomsg-python.git@master#egg=nanomsg',
-    ],
+    #dependency_links=[
+    #    'git+https://github.com/tonysimpson/nanomsg-python.git@master#egg=nanomsg',
+    #],
     classifiers=[
         'License :: OSI Approved :: MIT License',
         'Programming Language :: Python :: 2.7',

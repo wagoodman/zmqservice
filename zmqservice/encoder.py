@@ -46,7 +46,7 @@ class Encoder(object):
 
 
 class JSONEncoder(Encoder):
-    """ JSON encoder for nanoservice message """
+    """ JSON encoder for zmqservice message """
 
     def __init__(self):
         super(JSONEncoder, self).__init__()
@@ -59,7 +59,7 @@ class JSONEncoder(Encoder):
 
 
 class MsgPackEncoder(Encoder):
-    """ MsgPack encoder for nanoservice message """
+    """ MsgPack encoder for zmqservice message """
 
     def __init__(self):
         super(MsgPackEncoder, self).__init__()
@@ -72,7 +72,7 @@ class MsgPackEncoder(Encoder):
 
 
 class PickleEncoder(Encoder):
-    """ Pickle encoder for nanoservice message """
+    """ Pickle encoder for zmqservice message """
 
     def __init__(self):
         super(PickleEncoder, self).__init__()

@@ -23,7 +23,7 @@ SOFTWARE.
 
 '''
 
-import nanomsg
+import zmq
 import logging
 
 from .error import SubscriberError
@@ -31,8 +31,8 @@ from .error import DecodeError
 from .error import RequestParseError
 from .error import AuthenticateError
 from .error import AuthenticatorInvalidSignature
-from .core import Endpoint, Process
-from .encoder import MsgPackEncoder
+from .core import Endpoint, Process, setGlobalContext
+from .encoder import MsgPackEncoder, PickleEncoder
 
 
 class Subscriber(Endpoint, Process):
@@ -42,11 +42,19 @@ class Subscriber(Endpoint, Process):
     # pylint: disable=too-many-arguments
     # pylint: disable=no-member
     def __init__(self, address, encoder=None, authenticator=None,
-                 socket=None, bind=True, timeouts=(None, None)):
+                 socket=None, bind=None, timeouts=(None, None)):
+        setGlobalContext()
 
         # Defaults
-        socket = socket or nanomsg.Socket(nanomsg.SUB)
+        socket = socket or zmq.context.socket(zmq.SUB)
+        socket.linger = 0 # prevent hang on close
         encoder = encoder or MsgPackEncoder()
+
+        if bind is None:
+            if address.startswith("ipc:\\"):
+                bind = True
+            else:
+                bind = False
 
         super(Subscriber, self).__init__(
             socket, address, bind, encoder, authenticator, timeouts)
@@ -73,7 +81,7 @@ class Subscriber(Endpoint, Process):
         """ Subscribe to something and register a function """
         self.methods[tag] = fun
         self.descriptions[tag] = description
-        self.socket.set_string_option(nanomsg.SUB, nanomsg.SUB_SUBSCRIBE, tag)
+        self.socket.setsockopt(zmq.SUBSCRIBE, tag)
 
     # pylint: disable=logging-format-interpolation
     # pylint: disable=duplicate-code
@@ -105,7 +113,6 @@ class Subscriber(Endpoint, Process):
             logging.error(
                 'Subscriber error while parsing request: {}'
                 .format(exception), exc_info=1)
-
         else:
             logging.debug(
                 'Subscriber received payload: {}'
@@ -125,15 +132,17 @@ class Subscriber(Endpoint, Process):
 
 
 class Publisher(Endpoint):
-    """ A Publisher sends messages down the nanomsg socket """
+    """ A Publisher sends messages down the zmq socket """
 
     # pylint: disable=too-many-arguments
     # pylint: disable=no-member
     def __init__(self, address, encoder=None, authenticator=None,
-                 socket=None, bind=False, timeouts=(None, None)):
+                 socket=None, bind=True, timeouts=(None, None)):
+        setGlobalContext()
 
         # Defaults
-        socket = socket or nanomsg.Socket(nanomsg.PUB)
+        socket = socket or zmq.context.socket(zmq.PUB)
+        socket.linger = 0 # prevent hang on close
         encoder = encoder or MsgPackEncoder()
 
         super(Publisher, self).__init__(

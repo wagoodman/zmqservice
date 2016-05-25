@@ -20,7 +20,7 @@ install:
 	@python setup.py install
 
 clean:
-	@rm -rf build dist nanoservice.egg-info
+	@rm -rf build dist zmqservice.egg-info
 
 bench:
 	@python benchmarks/bench_req_rep.py

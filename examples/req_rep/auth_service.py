@@ -10,9 +10,9 @@ import random
 import hashlib
 import logging
 
-from nanoservice import Responder
-from nanoservice import Authenticator
-from nanoservice import config
+from zmqservice import Responder
+from zmqservice import Authenticator
+from zmqservice import config
 
 
 CONF = None

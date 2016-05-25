@@ -1,7 +1,7 @@
 import time
-import nanomsg
+import zmq
 from multiprocessing import Process
-from nanoservice import Subscriber, Publisher
+from zmqservice import Subscriber, Publisher
 
 import util
 
@@ -10,7 +10,7 @@ def start_service(addr, n):
     """ Start a service """
 
     s = Subscriber(addr)
-    s.socket.set_string_option(nanomsg.SUB, nanomsg.SUB_SUBSCRIBE, 'test')
+    s.socket.setsockopt(zmq.SUBSCRIBE, 'test')
 
     started = time.time()
     for _ in range(n):

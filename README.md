@@ -1,45 +1,21 @@
-nanoservice
+zmqservice
 ===========
-nanoservice is a small Python library for writing lightweight networked services
-using [nanomsg](http://nanomsg.org/)
+zmqservice is a small Python library for writing lightweight networked services
+using [zmq](http://zeromq.org/)
 
-With nanoservice you can break up monolithic applications into small,
+With zmqservice you can break up monolithic applications into small,
 specialized services which communicate with each other.
 
-[![Build Status](https://travis-ci.org/walkr/nanoservice.svg?branch=master)](https://travis-ci.org/walkr/nanoservice)
+This is a port of 'nanoservice' to use zmq. Protip: when [nanomsg](http://nanomsg.org/) is out of beta checkout [nanoservice](https://github.com/walkr/nanoservice)
 
 ## Install
 
-1) Make sure you have the nanomsg library installed:
-
-```shell
-$ git clone git@github.com:nanomsg/nanomsg.git
-$ ./configure
-$ make
-$ make check
-$ sudo make install
-```
-
-For more details visit the official [nanomsg repo](https://github.com/nanomsg/nanomsg)
-
-On OS X you can also do:
-
-```shell
-$ brew install nanomsg
-```
-
-2) Install nanoservice:
+1) Install zmqservice:
 
 From project directory
 
 ```shell
 $ make install
-```
-
-Or via pip
-
-```shell
-$ pip install nanoservice (it's broken)
 ```
 
 
@@ -49,7 +25,7 @@ $ pip install nanoservice (it's broken)
 The service:
 
 ```python
-from nanoservice import Responder
+from zmqservice import Responder
 
 def echo(msg):
     return msg
@@ -67,7 +43,7 @@ $ python echo_service.py
 The client:
 
 ```python
-from nanoservice import Requester
+from zmqservice import Requester
 
 c = Requester('ipc:///tmp/service.sock')
 res, err = c.call('echo', 'hello world’)

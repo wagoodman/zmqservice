@@ -1,9 +1,9 @@
 import time
 from multiprocessing import Process
 
-from nanoservice import Authenticator
-from nanoservice import Subscriber
-from nanoservice import Publisher
+from zmqservice import Authenticator
+from zmqservice import Subscriber
+from zmqservice import Publisher
 
 import util
 
