@@ -1,12 +1,12 @@
 zmqservice
 ===========
 zmqservice is a small Python library for writing lightweight networked services
-using [zmq](http://zeromq.org/)
+using [zmq](http://zeromq.org/).
 
 With zmqservice you can break up monolithic applications into small,
 specialized services which communicate with each other.
 
-This is a port of 'nanoservice' to use zmq. Protip: when [nanomsg](http://nanomsg.org/) is out of beta checkout [nanoservice](https://github.com/walkr/nanoservice)
+**This is a port of 'nanoservice' to use zmq instead of nanomsg. Protip: when [nanomsg](http://nanomsg.org/) is out of beta I'd recommend moving to  [nanoservice](https://github.com/walkr/nanoservice) instead.**
 
 ## Install
 
@@ -18,9 +18,7 @@ From project directory
 $ make install
 ```
 
-
 ## Example Usage
-
 
 The service:
 
@@ -34,7 +32,6 @@ s = Responder('ipc:///tmp/service.sock')
 s.register('echo', echo)
 s.start()
 ```
-
 
 ```shell
 $ python echo_service.py
