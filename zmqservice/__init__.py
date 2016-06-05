@@ -1,5 +1,6 @@
 """Main module for zmqservice"""
 
+from zmqservice.thread import SubscriberThread
 from zmqservice.reqrep import Requester, Responder
 from zmqservice.pubsub import Subscriber, Publisher
 from zmqservice.crypto import Authenticator
@@ -18,9 +19,9 @@ from zmqservice.error import (
 )
 
 __all__ = [
-    'Requester', 'Responder', 'Subscriber', 'Publisher', 'Authenticator',
-    'ZmqServiceError', 'ServiceError', 'ClientError', 'ConfigError',
-    'AuthenticatorInvalidSignature', 'RequestParseError',
+    'SubscriberThread', 'Requester', 'Responder', 'Subscriber', 'Publisher',
+    'Authenticator', 'ZmqServiceError', 'ServiceError', 'ClientError',
+    'ConfigError', 'AuthenticatorInvalidSignature', 'RequestParseError',
     'PublisherError', 'SubscriberError', 'EncodeError',
     'DecodeError', 'AuthenticateError'
 ]

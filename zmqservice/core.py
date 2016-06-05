@@ -62,7 +62,7 @@ class Endpoint(object):
     # pylint: disable=too-many-arguments
     # pylint: disable=no-member
     def __init__(self, socket, address, bind, encoder, authenticator,
-                 timeouts=(None, None)):
+                 timeouts=(None, None), logger=None):
 
         # timeouts must be a pair of the form:
         # (send-timeout-value, recv-timeout-value)
@@ -72,15 +72,19 @@ class Endpoint(object):
         self.bind = bind
         self.encoder = encoder
         self.authenticator = authenticator
+        self.logger = logger or logging.getLogger()
         self.initialize(timeouts)
 
     def initialize(self, timeouts):
         """ Bind or connect the zmq socket to some address """
 
         # Bind or connect to address
-        if self.bind is True:
-            self.socket.bind(self.address)
-        else:
+        try:
+            if self.bind is True:
+                self.socket.bind(self.address)
+            else:
+                self.socket.connect(self.address)
+        except zmq.error.ZMQError:
             self.socket.connect(self.address)
 
         # Set send and recv timeouts
@@ -160,13 +164,13 @@ class Process(object):
         if threading.current_thread().name == 'MainThread':
             signal.signal(signal.SIGINT, self.stop)
 
-        logging.info('Started on {}'.format(self.address))
+        self.logger.debug('Starting ZMQProcess on {}'.format(self.address))
 
         while True:
             self.process()
 
     def stop(self, dummy_signum=None, dummy_frame=None):
         """ Shutdown process (this method is also a signal handler) """
-        logging.info('Shutting down ...')
+        self.logger.debug('Stopping ZMQProcess')
         self.socket.close()
         sys.exit(0)

@@ -42,13 +42,13 @@ class Subscriber(Endpoint, Process):
     # pylint: disable=too-many-arguments
     # pylint: disable=no-member
     def __init__(self, address, encoder=None, authenticator=None,
-                 socket=None, bind=None, timeouts=(None, None)):
+                 socket=None, bind=None, timeouts=(None, None), logger=None):
         setGlobalContext()
 
         # Defaults
         socket = socket or zmq.context.socket(zmq.SUB)
         socket.linger = 0 # prevent hang on close
-        encoder = encoder or MsgPackEncoder()
+        encoder = encoder or PickleEncoder()
 
         if bind is None:
             if address.startswith("ipc:\\"):
@@ -57,20 +57,19 @@ class Subscriber(Endpoint, Process):
                 bind = False
 
         super(Subscriber, self).__init__(
-            socket, address, bind, encoder, authenticator, timeouts)
+            socket, address, bind, encoder, authenticator, timeouts, logger)
 
         self.methods = {}
         self.descriptions = {}
 
     def parse(self, subscription):
         """ Fetch the function registered for a certain subscription """
-
+        subTag, message = subscription.split(" ",1)
         for name in self.methods:
             tag = bytes(name.encode('utf-8'))
-            if subscription.startswith(tag):
+            if subTag.startswith(tag):
                 fun = self.methods.get(name)
-                message = subscription[len(tag):]
-                return tag, message, fun
+                return subTag, message, fun
         return None, None, None
 
     def register(self, name, fun, description=None):
@@ -95,37 +94,37 @@ class Subscriber(Endpoint, Process):
             subscription = self.socket.recv()
 
         except AuthenticateError as exception:
-            logging.error(
+            self.logger.error(
                 'Subscriber error while authenticating request: {}'
                 .format(exception), exc_info=1)
 
         except AuthenticatorInvalidSignature as exception:
-            logging.error(
+            self.logger.error(
                 'Subscriber error while authenticating request: {}'
                 .format(exception), exc_info=1)
 
         except DecodeError as exception:
-            logging.error(
+            self.logger.error(
                 'Subscriber error while decoding request: {}'
                 .format(exception), exc_info=1)
 
         except RequestParseError as exception:
-            logging.error(
+            self.logger.error(
                 'Subscriber error while parsing request: {}'
                 .format(exception), exc_info=1)
         else:
-            logging.debug(
+            self.logger.debug(
                 'Subscriber received payload: {}'
                 .format(subscription))
 
-        _tag, message, fun = self.parse(subscription)
+        tag, message, fun = self.parse(subscription)
         message = self.verify(message)
         message = self.decode(message)
 
         try:
-            result = fun(message)
+            result = fun(tag, message)
         except Exception as exception:
-            logging.error(exception, exc_info=1)
+            self.logger.error(exception, exc_info=1)
 
         # Return result to check successful execution of `fun` when testing
         return result
@@ -137,22 +136,23 @@ class Publisher(Endpoint):
     # pylint: disable=too-many-arguments
     # pylint: disable=no-member
     def __init__(self, address, encoder=None, authenticator=None,
-                 socket=None, bind=True, timeouts=(None, None)):
+                 socket=None, bind=True, timeouts=(None, None), logger=None):
         setGlobalContext()
 
         # Defaults
         socket = socket or zmq.context.socket(zmq.PUB)
         socket.linger = 0 # prevent hang on close
-        encoder = encoder or MsgPackEncoder()
+        encoder = encoder or PickleEncoder()
 
         super(Publisher, self).__init__(
-            socket, address, bind, encoder, authenticator, timeouts)
+            socket, address, bind, encoder, authenticator, timeouts, logger)
 
     def build_payload(self, tag, message):
         """ Encode, sign payload(optional) and attach subscription tag """
         message = self.encode(message)
         message = self.sign(message)
-        payload = bytes(tag.encode('utf-8')) + message
+        #payload = bytes(tag.encode('utf-8')) +" " + message
+        payload = "%s %s" % (tag, message)
         return payload
 
     def publish(self, tag, message):

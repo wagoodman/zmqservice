@@ -48,7 +48,7 @@ class Responder(Endpoint, Process):
         # Defaults
         socket = socket or zmq.context.socket(zmq.REP)
         socket.linger = 0 # prevent hang on close
-        encoder = encoder or MsgPackEncoder()
+        encoder = encoder or PickleEncoder()
 
         super(Responder, self).__init__(
             socket, address, bind, encoder, authenticator, timeouts)
@@ -93,7 +93,7 @@ class Responder(Endpoint, Process):
         response = None
 
         try:
-            payload = self.receive()
+            payload = self.socket.recv()
             method, args, ref = self.parse(payload)
             response = self.execute(method, args, ref)
 
@@ -138,7 +138,7 @@ class Requester(Endpoint):
         # Defaults
         socket = socket or zmq.context.socket(zmq.REQ)
         socket.linger = 0 # prevent hang on close
-        encoder = encoder or MsgPackEncoder()
+        encoder = encoder or PickleEncoder()
 
         super(Requester, self).__init__(
             socket, address, bind, encoder, authenticator, timeouts)
