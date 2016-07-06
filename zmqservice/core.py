@@ -40,7 +40,7 @@ def setGlobalContext():
     procId = getattr(zmq, 'procId', None)
     # This is the first import or ...
     # This is a new process (from a fork or similar), the old context is stale
-    if (procId == None and getattr(zmq, 'context', None) == None) or \
+    if (procId is None and getattr(zmq, 'context', None) is None) or \
        procId != os.getpid():
 
         zmq.context = zmq.Context()
