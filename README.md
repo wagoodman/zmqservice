@@ -1,3 +1,5 @@
+[![Code Issues](https://www.quantifiedcode.com/api/v1/project/3904f389497847a4ba7f2b124a57bf41/badge.svg)](https://www.quantifiedcode.com/app/project/3904f389497847a4ba7f2b124a57bf41)
+
 zmqservice
 ===========
 zmqservice is a small Python library for writing lightweight networked services
